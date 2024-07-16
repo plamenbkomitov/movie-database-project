@@ -1,25 +1,7 @@
 import argparse
 from db_init import init_db
-from Movie import Movie
-
-
-def print_movie_details(movie):
-    if movie:
-        print(f"ID: {movie['id']}")
-        print(f"Title: {movie['title']}")
-        print(f"Description: {movie['description']}")
-        print(f"Release Date: {movie['release_date']}")
-        print(f"Director: {movie['director']}")
-        print(f"Genre: {movie['genre_name']}")
-        print(f"Likes: {movie['likes']}")
-    else:
-        print("Movie not found.")
-
-
-def print_movie_list(movies):
-    for movie in movies:
-        print_movie_details(movie)
-        print()
+from Models.Movie import Movie
+from utils import print_movie_details, print_movie_list
 
 
 def handle_movlst(args):
@@ -29,39 +11,54 @@ def handle_movlst(args):
 
 def handle_movdt(args):
     movie = Movie.get_by_id(args.movie_id)
-    print_movie_details(movie)
+    if movie:
+        print_movie_details(movie)
+    else:
+        print(f"No movie found with ID: {args.movie_id}")
 
 
 def handle_movsrch(args):
     movies = Movie.search_by_title(args.query)
-    print_movie_list(movies)
+    if movies:
+        print_movie_list(movies)
+    else:
+        print(f"No movies found with title matching: {args.query}")
 
 
 def handle_movadd(args):
-    Movie.add(args.title, args.description, args.release_date, args.director, args.genre)
-    print("Movie added successfully.")
+    movie_id = Movie.add(args.title, args.description, args.release_date, args.director, args.genre)
+    if movie_id is not None:
+        print(f"Movie added successfully with ID: {movie_id}")
+    else:
+        print("Failed to add the movie.")
 
 
 def handle_movfv(args):
-    Movie.favourite_movie(args.movie_id)
-    print("Movie marked as favorite.")
+    if Movie.get_by_id(args.movie_id):
+        Movie.favourite_movie(args.movie_id)
+        print(f"Movie with ID {args.movie_id} marked as favorite.")
+    else:
+        print(f"Movie with ID {args.movie_id} does not exist.")
 
 
 def handle_movcat(args):
     if args.category == 'liked':
         movies = Movie.get_top_liked()
-        print_movie_list(movies)
     elif args.category == 'newest':
         movies = Movie.get_newest()
-        print_movie_list(movies)
     elif args.category == 'genre':
         if not args.genre_name:
             print("Usage: movcat genre <genre_name>")
             return
         movies = Movie.get_by_genre(args.genre_name)
-        print_movie_list(movies)
     else:
         print("Invalid category. Choose from [liked, newest, genre]")
+        return
+
+    if movies:
+        print_movie_list(movies)
+    else:
+        print(f"No movies found for category: {args.category}")
 
 
 def setup_movlst(subparsers):
