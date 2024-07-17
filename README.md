@@ -22,7 +22,7 @@ The Movie Database Project is a command-line interface (CLI) application that al
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/movie-database-project.git
+   git clone https://github.com/plamenbkomitov/movie-database-project.git
    cd movie-database-project
    ```
 2. **Install dependencies**:
