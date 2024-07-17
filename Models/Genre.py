@@ -1,4 +1,4 @@
-from constants import PREDEFINED_GENRES, UNKNOWN_GENRE
+from Helpers.constants import PREDEFINED_GENRES, UNKNOWN_GENRE
 from db_init import get_db_connection
 
 
