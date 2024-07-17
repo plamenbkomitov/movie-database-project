@@ -17,6 +17,15 @@ class Movie:
 
     @staticmethod
     def validate_date(date_text):
+        """
+        Validate the format of the given date string.
+
+        Args:
+            date_text (str): The date string to be validated.
+
+        Returns:
+            str or None: The validated date string in 'YYYY-MM-DD' format if valid, otherwise None.
+        """
         try:
             datetime.datetime.strptime(date_text, '%Y-%m-%d')
             return date_text
@@ -26,6 +35,19 @@ class Movie:
 
     @staticmethod
     def add(title, description, release_date, director, genre):
+        """
+        Add a new movie to the database.
+
+        Args:
+            title (str): The title of the movie.
+            description (str): The description or plot summary of the movie.
+            release_date (str): The release date of the movie in 'YYYY-MM-DD' format.
+            director (str): The director of the movie.
+            genre (str): The genre of the movie.
+
+        Returns:
+            int or None: The ID of the newly added movie if successful, otherwise None.
+        """
         release_date = Movie.validate_date(release_date)
         if release_date is None:
             return None
@@ -57,6 +79,17 @@ class Movie:
 
     @staticmethod
     def movie_exists(title, release_date, director):
+        """
+        Check if a movie already exists in the database based on title, release date, and director.
+
+        Args:
+            title (str): The title of the movie.
+            release_date (str): The release date of the movie in 'YYYY-MM-DD' format.
+            director (str): The director of the movie.
+
+        Returns:
+            bool: True if a movie with the given details exists, otherwise False.
+        """
         with get_db_connection() as conn:
             existing_movie = conn.execute(
                 'SELECT id FROM Movies WHERE title = ? AND release_date = ? AND director = ?',
@@ -67,6 +100,12 @@ class Movie:
 
     @staticmethod
     def favourite_movie(movie_id):
+        """
+        Mark a movie as favorite by incrementing its like count.
+
+        Args:
+            movie_id (int): The ID of the movie to mark as favorite.
+        """
         if not Movie.get_by_id(movie_id):
             print(f"Movie with ID {movie_id} does not exist.")
             return
@@ -75,6 +114,12 @@ class Movie:
 
     @staticmethod
     def get_all():
+        """
+        Retrieve all movies from the database.
+
+        Returns:
+            list: A list of dictionaries representing all movies, each dictionary containing movie details.
+        """
         with get_db_connection() as conn:
             return conn.execute('''
                 SELECT m.*, g.name as genre_name
@@ -84,6 +129,15 @@ class Movie:
 
     @staticmethod
     def get_by_id(movie_id):
+        """
+        Retrieve a movie from the database by its ID.
+
+        Args:
+            movie_id (int): The ID of the movie to retrieve.
+
+        Returns:
+            dict or None: A dictionary containing movie details if found, otherwise None.
+        """
         with get_db_connection() as conn:
             return conn.execute('''
                 SELECT m.*, g.name as genre_name
@@ -94,6 +148,15 @@ class Movie:
 
     @staticmethod
     def search_by_title(query):
+        """
+        Search movies in the database by title.
+
+        Args:
+            query (str): The search query for movie titles.
+
+        Returns:
+            list: A list of dictionaries representing movies that match the search query.
+        """
         with get_db_connection() as conn:
             return conn.execute('''
                 SELECT m.*, g.name as genre_name
@@ -104,6 +167,15 @@ class Movie:
 
     @staticmethod
     def get_top_liked(limit=5):
+        """
+        Retrieve top movies by likes from the database.
+
+        Args:
+            limit (int): Maximum number of movies to retrieve (default is 5).
+
+        Returns:
+            list: A list of dictionaries representing top liked movies.
+        """
         with get_db_connection() as conn:
             return conn.execute('''
                 SELECT m.*, g.name as genre_name
@@ -115,6 +187,15 @@ class Movie:
 
     @staticmethod
     def get_newest(limit=5):
+        """
+        Retrieve newest movies from the database.
+
+        Args:
+            limit (int): Maximum number of movies to retrieve (default is 5).
+
+        Returns:
+            list: A list of dictionaries representing newest movies.
+        """
         with get_db_connection() as conn:
             return conn.execute('''
                 SELECT m.*, g.name as genre_name
@@ -126,6 +207,16 @@ class Movie:
 
     @staticmethod
     def get_by_genre(genre_name, limit=5):
+        """
+        Retrieve movies by genre from the database.
+
+        Args:
+            genre_name (str): The name of the genre to filter movies.
+            limit (int): Maximum number of movies to retrieve (default is 5).
+
+        Returns:
+            list: A list of dictionaries representing movies of the specified genre.
+        """
         with get_db_connection() as conn:
             genre_name = genre_name.lower()
             return conn.execute('''
