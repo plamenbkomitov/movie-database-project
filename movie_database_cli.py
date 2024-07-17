@@ -1,7 +1,7 @@
 import argparse
 from db_init import init_db
 from Models.Movie import Movie
-from utils import print_movie_details, print_movie_list
+from Helpers.utils import print_movie_details, print_movie_list
 
 
 def handle_movlst(args):

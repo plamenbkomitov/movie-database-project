@@ -1,5 +1,5 @@
 import sqlite3
-from constants import DB_NAME, PREDEFINED_GENRES
+from Helpers.constants import DB_NAME, PREDEFINED_GENRES
 
 
 def get_db_connection():
