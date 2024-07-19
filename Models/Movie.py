@@ -2,11 +2,12 @@ import sqlite3
 
 from db_init import get_db_connection
 from Models.Genre import Genre
+from Helpers.movie_cover import get_movie_cover_from_url
 import datetime
 
 
 class Movie:
-    def __init__(self, id, title, description, release_date, director, genre_id, likes):
+    def __init__(self, id, title, description, release_date, director, genre_id, likes, cover):
         self.id = id
         self.title = title
         self.description = description
@@ -14,6 +15,7 @@ class Movie:
         self.director = director
         self.genre_id = genre_id
         self.likes = likes
+        self.cover = cover
 
     @staticmethod
     def validate_date(date_text):
@@ -227,3 +229,49 @@ class Movie:
                 ORDER BY m.likes DESC
                 LIMIT ?
             ''', (genre_name, limit)).fetchall()
+
+    @staticmethod
+    def add_movie_cover_url(movie_id, image_url):
+        """
+        Add or update the cover image URL of a movie in the database.
+
+        Args:
+            movie_id (int): The ID of the movie to update.
+            image_url (str): The URL of the cover image to set.
+
+        Returns:
+            bool: True if the cover image was successfully updated, otherwise False.
+        """
+        try:
+            with get_db_connection() as conn:
+                result = conn.execute('UPDATE Movies SET cover = ? WHERE id = ?', (image_url, movie_id))
+                if result.rowcount == 0:
+                    return False
+                return True
+        except sqlite3.IntegrityError as e:
+            print(f"IntegrityError occurred: {e}")
+            return None
+        except sqlite3.Error as e:
+            print(f"An error occurred: {e}")
+            return False
+
+    @staticmethod
+    def get_movie_cover(movie_id):
+        """
+        View the ASCII art representation of a movie cover.
+
+        Args:
+            movie_id (int): The ID of the movie to retrieve the cover image URL from the database.
+
+        Returns:
+            str or None: The ASCII art representation of the cover image if found, otherwise None.
+        """
+        with get_db_connection() as conn:
+            result = conn.execute('SELECT cover FROM Movies WHERE id = ?', (movie_id,)).fetchone()
+            if result is None:
+                print(f"Movie with ID {movie_id} does not exist.")
+                return None
+            if result['cover']:
+                return get_movie_cover_from_url(result['cover'])
+            else:
+                return None

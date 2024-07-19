@@ -26,7 +26,10 @@ The Movie Database Project is a command-line interface (CLI) application that al
    cd movie-database-project
    ```
 2. **Install dependencies**:
-   Ensure you have Python installed. The required modules are part of the Python Standard Library, so no additional installations are necessary.
+   Ensure you have Python installed. To use the experimental movie cover features you need to install the following dependencies:
+    ```bash
+    pip3 install pillow ansicolors
+    ```
 
 3. **Initialize the database**:
    The database initialization is handled automatically when you run the application for the first time.
@@ -104,6 +107,34 @@ python movie_database_cli.py movcat newest
 python movie_database_cli.py movcat genre "Action"
 ```
 
+### Manage Movie Covers
+
+Experimental functionality that adds and views movie covers.
+You can add a cover URL to a movie or view the cover of a movie in the form of ASCII art.
+
+#### Add Movie Cover
+
+Adds a cover URL to a specific movie by its ID.
+
+```bash
+# Command
+python movie_database_cli.py movcvr add <movie_id> <cover_url>
+# Example
+python movie_database_cli.py movcvr add 1 "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg"
+```
+
+#### View Movie Cover
+
+Displays the cover of a specific movie by its ID in the form of ASCII art.
+
+```bash
+# Command
+python movie_database_cli.py movcvr view <movie_id>
+
+# Example
+python movie_database_cli.py movcvr view 1
+```
+
 ## Database Structure
 
 The database consists of two main tables: Movies and Genres.
@@ -117,6 +148,7 @@ The database consists of two main tables: Movies and Genres.
 - **director**: Text, Not Null, Max length 50
 - **genre_id**: Integer, Foreign Key references Genres(id)
 - **likes**: Integer, Default 0
+- **cover**: Text, Max length 500, Default NULL
 
 ### Genres Table
 
@@ -141,9 +173,11 @@ movie-database-project/
 ├── Helpers/
 │   ├── constants.py
 │   └── utils.py
+│   └── movie_cover.py
 │
 ├── db_init.py
 └── movie_database_cli.py
+
 ```
 ## File Descriptions
 
@@ -153,6 +187,7 @@ movie-database-project/
 - **movie_database_cli.py**: The main CLI application script that defines the available commands and their handlers.
 - **constants.py**: Contains constant values used throughout the project, such as the database name and predefined genres.
 - **utils.py**: Utility functions used throughout the project.
+- **movie_cover.py**: Functions for fetching and rendering movie covers.
 - **README.md**: Documentation for the project.
 
 ## Predefined Genres
