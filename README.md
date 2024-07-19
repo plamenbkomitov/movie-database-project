@@ -28,7 +28,7 @@ The Movie Database Project is a command-line interface (CLI) application that al
 2. **Install dependencies**:
    Ensure you have Python installed. To use the experimental movie cover features you need to install the following dependencies:
     ```bash
-    pip3 install pillow ansicolors
+    pip3 install requests pillow ansicolors
     ```
 
 3. **Initialize the database**:
@@ -81,6 +81,8 @@ python movie_database_cli.py movadd <title> <desc> <date> <director> <genre>
 
 # Example
 python movie_database_cli.py movadd "Inception" "A mind-bending thriller" "2010-07-16" "Christopher Nolan" "Science Fiction"
+python movie_database_cli.py movadd "Groundhog Day" "Man relives the same day" "1993-02-12" "Harold Ramis" "Comedy"
+python movie_database_cli.py movadd "Watchmen" "Masked vigilantes in an alternate reality" "2009-03-06" "Zack Snyder" "Action"
 ```
 ### Mark Movie as Favorite
 
@@ -119,10 +121,13 @@ Adds a cover URL to a specific movie by its ID.
 ```bash
 # Command
 python movie_database_cli.py movcvr add <movie_id> <cover_url>
-# Example
+# Example -> Inception
 python movie_database_cli.py movcvr add 1 "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg"
+# Example -> Groundhog day
+python movie_database_cli.py movcvr add 2 "https://m.media-amazon.com/images/M/MV5BZWIxNzM5YzQtY2FmMS00Yjc3LWI1ZjUtNGVjMjMzZTIxZTIxXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg"
+# Example -> Watchmen
+python movie_database_cli.py movcvr add 3 "https://i.ebayimg.com/images/g/vuAAAOSwHPlWgFxc/s-l1600.jpg"
 ```
-
 #### View Movie Cover
 
 Displays the cover of a specific movie by its ID in the form of ASCII art.
