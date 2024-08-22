@@ -18,6 +18,7 @@ def init_db():
                         director TEXT NOT NULL CHECK(LENGTH(director) <= 50),
                         genre_id INTEGER NOT NULL,
                         likes INTEGER DEFAULT 0,
+                        cover TEXT CHECK(LENGTH(cover) <= 500),
                         FOREIGN KEY (genre_id) REFERENCES Genres(id)
                     )''')
     conn.execute('''CREATE TABLE IF NOT EXISTS Genres (

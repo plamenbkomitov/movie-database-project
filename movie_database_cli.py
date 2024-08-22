@@ -61,6 +61,30 @@ def handle_movcat(args):
         print(f"No movies found for category: {args.category}")
 
 
+def handle_movcvr(args):
+    if args.interaction == 'view':
+        movie_cover = Movie.get_movie_cover(args.movie_id)
+    elif args.interaction == 'add':
+        if not args.image_url:
+            print("Usage: movcvr <movie_id> add <image_url>")
+            return
+
+        cover_added = Movie.add_movie_cover_url(args.movie_id, args.image_url)
+        if cover_added:
+            print(f"Cover for movie with ID: {args.movie_id} was successfully added.")
+        else:
+            print("Failed to add movie cover.")
+        return
+    else:
+        print("Invalid option. Choose from [view, add]")
+        return
+
+    if movie_cover:
+        print(movie_cover)
+    else:
+        print(f"No cover found for movie with ID: {args.movie_id}. Add valid URL for the cover of your movie.")
+
+
 def setup_movlst(subparsers):
     subparsers.add_parser('movlst', help="List all movies").set_defaults(func=handle_movlst)
 
@@ -100,6 +124,14 @@ def setup_movcat(subparsers):
     movcat_parser.set_defaults(func=handle_movcat)
 
 
+def setup_movcvr(subparsers):
+    movcvr_parser = subparsers.add_parser('movcvr', help="Add or view movie covers")
+    movcvr_parser.add_argument('interaction', choices=['view', 'add'], help="Interact with movie cover")
+    movcvr_parser.add_argument('movie_id', type=int, help="ID of the movie")
+    movcvr_parser.add_argument('image_url', type=str, nargs='?', help="Genre name (required if interaction is 'add')")
+    movcvr_parser.set_defaults(func=handle_movcvr)
+
+
 def setup_parser():
     parser = argparse.ArgumentParser(description="Movie database CLI")
     subparsers = parser.add_subparsers(dest="command")
@@ -111,6 +143,7 @@ def setup_parser():
     setup_movadd(subparsers)
     setup_movfv(subparsers)
     setup_movcat(subparsers)
+    setup_movcvr(subparsers)
 
     return parser
 
